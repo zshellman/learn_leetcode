@@ -16,36 +16,45 @@ class Solution(object):
         :type R: int
         :rtype: int
         """
-        total = 0
-        if L <= root.left.val <= R:
-            total = root.val
-
         def sum_for_lr(node, L, R, total):
-            if node.left:
-                if L <= node.left.val <= R:
-                    total += node.left.val
-                return sum_for_lr(node.left, L, R, total)
-            if node.right:
-                if L <= node.right.val <= R:
-                    total += node.right.val
-                return sum_for_lr(node.right, L, R, total)
+            if not node:
+                return total
+            if L <= node.val <= R:
+                total += node.val
+            total = sum_for_lr(node.left, L, R, total)
+            total = sum_for_lr(node.right, L, R, total)
 
             return total
 
-        return sum_for_lr(root, L, R, total)
+        return sum_for_lr(root, L, R, 0)
 
 
-def array_to_tree(array):
-    root = TreeNode(array[0])
-    cur_node = root
-    length = len(array)
-    for i in range(1, length):
-        l, r = 2*i+1, 2*i+2
-        if length >= l:
-            cur_node.left = TreeNode(array[l])
-        if length >= r:
-            cur_node.right = TreeNode(array[r])
+def array_to_tree(array, index):
+    if index < len(array):
+        node = TreeNode(array[index])
+    else:
+        return None
+
+    node.left = array_to_tree(array, 2*index + 1)
+    node.right = array_to_tree(array, 2*index + 2)
+
+    return node
+
+def print_binary_tree(root):
+    if not root:
+        return
+    print(root.val)
+    print_binary_tree(root.left)
+    print_binary_tree(root.right)
 
 
 if __name__ == '__main__':
-    pass
+    a = [10,5,15,3,7,13,18,1,None,6]
+
+    root = array_to_tree(a, 0)
+    print('---------------')
+    print_binary_tree(root)
+    print('------------')
+    s = Solution()
+    print(s.rangeSumBST(root, 6, 10))
+
