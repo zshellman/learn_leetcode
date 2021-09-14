@@ -36,16 +36,63 @@ class Solution(object):
 
 
 def array_to_tree(array):
-    root = TreeNode(array[0])
-    cur_node = root
     length = len(array)
-    for i in range(1, length):
+    root = TreeNode(array[0])
+    for i in range(0, length):
         l, r = 2*i+1, 2*i+2
-        if length >= l:
+        print(l, r)
+        cur_node = TreeNode(array[i])
+        if i == 0:
+            root = cur_node
+        if length > l:
             cur_node.left = TreeNode(array[l])
-        if length >= r:
+        if length > r:
             cur_node.right = TreeNode(array[r])
+    return root
+
+def array_to_tree2(array, i):
+    length = len(array)
+    if i < length:
+        root = TreeNode(array[i])
+        root.left = array_to_tree2(array, 2 * i + 1)
+        root.right = array_to_tree2(array, 2 * i + 2)
+        return root
+    return None
+
+
+def test():
+    root = array_to_tree2([1, 2, 3, 4, 5, 6], 0)
+    def iter_tree(node):
+        if not node:
+            return
+        print(node.val)
+        iter_tree(node.left)
+        iter_tree(node.right)
+    iter_tree(root)
+
+
+class Tree(object):
+
+    def __init__(self, root):
+        self.generate = self.generate_next(root)
+
+    def generate_next(self, root):
+        if not root:
+            return None
+        yield from self.generate_next(root.left)
+        if root.val:
+            yield root.val
+        yield from self.generate_next(root.right)
+
+    def test_next(self):
+        for d in self.generate:
+            yield d
 
 
 if __name__ == '__main__':
-    pass
+    root = array_to_tree2([7, 3, 15, None, None, 9, 20], 0)
+    a = Tree(root)
+    for d in a.generate:
+        print(d)
+    print(a.test_next())
+    print(a.test_next())
