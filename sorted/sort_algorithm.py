@@ -83,7 +83,62 @@ def merge(left, right):
     return ret
 
 
+def quick_sort(sort_list, left, right):
+    if left < right:
+        mid = partition2(sort_list, left, right)
+        print(mid)
+        quick_sort(sort_list, left, mid - 1)
+        quick_sort(sort_list, mid+1, right)
+
+
+
+
+def partition(sort_list, left, right):
+    # 选取中间值
+    flag = sort_list[left]
+    l = left + 1
+    r = right
+    print('-----------', left, right)
+    while l <= r:
+        # 从右往左找到第一个小于flag的值
+        while l <= r and sort_list[r] > flag:
+            r -= 1
+        # 从左往右找到第一个大于等于flag的值
+        while l <= r and sort_list[l] <= flag:
+            l += 1
+        print('swap: ', l, r)
+        if l < r:
+            # 交换左右两边的值
+            sort_list[l], sort_list[r] = sort_list[r], sort_list[l]
+
+    # 将flag值保持在中间位置(走到这里表示l>=r)
+    sort_list[left], sort_list[r] = sort_list[r], flag
+    # print(flag, l, r)
+    # temp = sort_list[r]
+    # sort_list[r] = flag
+    # sort_list[left] = temp
+    print(sort_list)
+    return r
+
+def partition2(sort_list, left, right):
+    flag = sort_list[left]
+    l = left + 1
+    r = right
+    while l <= r:
+        while l <= r and sort_list[l] < flag:
+            l += 1
+        while l <= r and sort_list[r] >= flag:
+            r -= 1
+        if l < r:
+            sort_list[l], sort_list[r] = sort_list[r], sort_list[l]
+    sort_list[left], sort_list[r] = sort_list[r], flag
+    return r
+
+
+
 if __name__ == '__main__':
     a = [random.randint(0, 10) for i in range(0, 10)]
     print(a)
-    print(merge_sort(a))
+    print([i for i in range(0, 10)])
+    print(quick_sort(a, 0, len(a)-1))
+    print(a)
